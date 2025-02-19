@@ -1,0 +1,22 @@
+# 1. 軽量なPythonベースイメージを使用（AlpineやSlimなど）
+FROM python:3.10-slim
+
+# 2. 非rootユーザーを作成
+RUN addgroup --system app && adduser --system --group app
+USER app
+
+# 3. 作業ディレクトリの設定
+WORKDIR /app
+
+# 4. 依存関係を一括コピー & インストール
+COPY requirements.txt .
+
+USER root
+RUN pip install --no-cache-dir -r requirements.txt
+USER app
+
+# # 5. アプリケーションコードをコピー
+# COPY api/ .
+
+# 6. FastAPI の起動設定 (uvicorn)
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
