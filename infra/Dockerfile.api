@@ -8,15 +8,16 @@ USER app
 # 3. 作業ディレクトリの設定
 WORKDIR /app
 
+# 5. アプリケーションコードをコピー
+COPY api /app/api
+
 # 4. 依存関係を一括コピー & インストール
-COPY requirements.txt .
+COPY infra/requirements.txt .
 
 USER root
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
 USER app
 
-# # 5. アプリケーションコードをコピー
-# COPY api/ .
-
 # 6. FastAPI の起動設定 (uvicorn)
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
