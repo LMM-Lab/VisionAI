@@ -3,3 +3,4 @@ torch
 torchvision
 fastapi
 uvicorn
+pytest
