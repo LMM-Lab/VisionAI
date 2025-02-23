@@ -57,9 +57,9 @@ jobs:
           pip install pytest
           pip install -r .devcontainer/requirements.txt
 
-      - name: Install Detectron2
+      - name: Install Detectron2 (Compatible with CUDA 11.6)
         run: |
-          pip install 'git+https://github.com/facebookresearch/detectron2.git@main'
+          pip install 'detectron2 -f https://dl.fbaipublicfiles.com/detectron2/wheels/cu116/torch2.0/index.html'
 
       - name: Run Unit Tests
         run: pytest tests
