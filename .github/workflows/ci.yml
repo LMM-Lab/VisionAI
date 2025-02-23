@@ -43,8 +43,8 @@ jobs:
           sudo apt-get install -y fonts-dejavu libgl1-mesa-dev libglib2.0-0
           pip install --upgrade pip
           pip install pytest
-          pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu116
+          pip install -r .devcontainer/requirements.txt --extra-index-url https://download.pytorch.org/whl/cu116
           pip install 'git+https://github.com/facebookresearch/detectron2.git'
 
       - name: Run Unit Tests
-        run: pytest tests/unit_test
+        run: pytest tests
