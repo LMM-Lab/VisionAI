@@ -4,3 +4,9 @@ torchvision
 fastapi
 uvicorn
 pytest
+httpx
+flake8
+isort<6
+black
+mypy
+pysen

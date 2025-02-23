@@ -1,0 +1,50 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  lint:
+    name: Run Lint Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: pip install pysen black flake8 isort mypy
+
+      - name: Run Lint
+        run: pysen run lint
+
+  test:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fonts-dejavu libgl1-mesa-dev libglib2.0-0
+          pip install --upgrade pip
+          pip install pytest
+          pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu116
+          pip install 'git+https://github.com/facebookresearch/detectron2.git'
+
+      - name: Run Unit Tests
+        run: pytest tests/unit_test
