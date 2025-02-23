@@ -1,0 +1,52 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  lint:
+    name: Run Lint Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: pip install pysen black flake8 "isort<6" mypy
+
+      - name: Run Lint
+        run: pysen run lint
+
+  test:
+    name: Run Unit Tests
+    runs-on: ubuntu-22.04
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            python3.10 python3-pip git curl build-essential \
+            fonts-dejavu libgl1-mesa-dev libglib2.0-0
+
+      - name: Set up Python
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install pytest
+
+      - name: Install Python dependencies
+        run: |
+          python3 -m pip install -r .devcontainer/requirements.txt
+
+      - name: Run Unit Tests
+        run: pytest tests

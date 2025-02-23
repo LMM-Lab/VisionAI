@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-python.isort",
+    "ms-vsliveshare.vsliveshare",
+    "njpwerner.autodocstring",
+    "ms-python.black-formatter",
+    "eamodio.gitlens",
+    "ms-azuretools.vscode-docker",
+    "shd101wyy.markdown-preview-enhanced",
+    "yzhang.markdown-all-in-one"
+  ]
+}
