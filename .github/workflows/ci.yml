@@ -37,18 +37,29 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Install system dependencies
+      - name: Install System Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y fonts-dejavu libgl1-mesa-dev libglib2.0-0
 
-      - name: Install Python dependencies
+      - name: Install PyTorch and Dependencies
         run: |
           pip install --upgrade pip
+          pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
+          echo "export TORCH_HOME=$(python -c 'import torch; print(torch.__path__[0])')" >> $GITHUB_ENV
+          echo "export TORCH_CUDA_ARCH_LIST='7.0 8.0 8.6 8.7 8.9 9.0'" >> $GITHUB_ENV
+
+      - name: Verify CUDA Availability
+        run: python -c "import torch; print('CUDA Available:', torch.cuda.is_available())"
+
+      - name: Install Other Python Dependencies
+        run: |
           pip install pytest
-          pip install torch torchvision torchaudio  # 🔹 CPUバージョンのTorch
           pip install -r .devcontainer/requirements.txt
-          pip install 'git+https://github.com/facebookresearch/detectron2.git@main' --no-deps
+
+      - name: Install Detectron2
+        run: |
+          pip install 'git+https://github.com/facebookresearch/detectron2.git@main'
 
       - name: Run Unit Tests
         run: pytest tests
