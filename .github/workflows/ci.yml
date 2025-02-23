@@ -37,24 +37,18 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Add NVIDIA CUDA repository
-        run: |
-          wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin
-          sudo mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
-          sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/7fa2af80.pub
-          sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /"
-          sudo apt-get update
-      - name: Install CUDA toolkit
-        run: sudo apt-get install -y cuda-toolkit-12-2
-
-      - name: Install dependencies
+      - name: Install system dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y fonts-dejavu libgl1-mesa-dev libglib2.0-0
+
+      - name: Install Python dependencies
+        run: |
           pip install --upgrade pip
           pip install pytest
-          pip install -r .devcontainer/requirements.txt --extra-index-url https://download.pytorch.org/whl/cu116
-          pip install 'git+https://github.com/facebookresearch/detectron2.git'
+          pip install torch torchvision torchaudio  # 🔹 CPUバージョンのTorch
+          pip install -r .devcontainer/requirements.txt
+          pip install 'git+https://github.com/facebookresearch/detectron2.git@main' --no-deps
 
       - name: Run Unit Tests
         run: pytest tests
