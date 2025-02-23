@@ -37,13 +37,15 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Install NVIDIA CUDA drivers
+      - name: Add NVIDIA CUDA repository
         run: |
+          wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin
+          sudo mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
+          sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/7fa2af80.pub
+          sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /"
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            nvidia-driver-525 \
-            nvidia-cuda-toolkit \
-            cuda-toolkit-12-1
+      - name: Install CUDA toolkit
+        run: sudo apt-get install -y cuda-toolkit-12-2
 
       - name: Install dependencies
         run: |
