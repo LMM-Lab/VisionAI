@@ -1,6 +1,11 @@
+from api.routes import object_detection
 from fastapi import APIRouter
 
 router = APIRouter()
+
+
+# 物体検出エンドポイントを統合
+router.include_router(object_detection.router, prefix="")
 
 
 @router.get("/predict")
