@@ -61,11 +61,9 @@ def run_object_detection(
     response: dict[str, Any] = {"results": result.to_json()}
     if annotate:
         annotated_img = result.plot()  # 画像を取得 (NumPy 配列)
-        _, buffer = cv2.imencode(
-            ".jpg", annotated_img
-        )  # 🔥 OpenCVでエンコード
-        response["annotated_image_base64"] = base64.b64encode(
-            buffer.tobytes()
-        ).decode("utf-8")
+        _, buffer = cv2.imencode(".jpg", annotated_img)  # 🔥 OpenCVでエンコード
+        response["annotated_image_base64"] = base64.b64encode(buffer.tobytes()).decode(
+            "utf-8"
+        )
 
     return response

@@ -1,6 +1,5 @@
-from fastapi import APIRouter
-
 from api.routes import object_detection
+from fastapi import APIRouter
 
 router = APIRouter()
 

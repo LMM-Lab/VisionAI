@@ -4,6 +4,7 @@ from typing import Any, Optional
 
 import cv2
 import numpy as np
+from api.services.object_detection import run_object_detection
 from fastapi import (
     APIRouter,
     File,
@@ -13,8 +14,6 @@ from fastapi import (
     WebSocket,
     WebSocketDisconnect,
 )
-
-from api.services.object_detection import run_object_detection
 
 router = APIRouter()
 
@@ -32,9 +31,7 @@ async def detect_objects(
     物体検出のエンドポイント
     """
     try:
-        parameters_dict: dict[str, Any] = (
-            json.loads(parameters) if parameters else {}
-        )
+        parameters_dict: dict[str, Any] = json.loads(parameters) if parameters else {}
     except json.JSONDecodeError:
         raise HTTPException(
             status_code=400, detail="Invalid JSON format for parameters"
@@ -42,9 +39,7 @@ async def detect_objects(
 
     image_bytes = file.file.read()
     image_array = np.frombuffer(image_bytes, dtype=np.uint8)
-    image = np.asarray(
-        cv2.imdecode(image_array, cv2.IMREAD_COLOR), dtype=np.uint8
-    )
+    image = np.asarray(cv2.imdecode(image_array, cv2.IMREAD_COLOR), dtype=np.uint8)
 
     response = run_object_detection(
         image, model, version, subtask, annotate, parameters_dict
